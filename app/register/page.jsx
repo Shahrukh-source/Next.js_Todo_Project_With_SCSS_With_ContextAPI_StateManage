@@ -1,30 +1,33 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
-import { Context } from "../../components/Clients";
-import { redirect } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { Context } from "../../components/Clients";
 
 const Page = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { user, setUser } = useContext(Context);
 
-  const loginHandler = async (e) => {
+  const registerHandler = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
-        body: JSON.stringify({
-          email,
-          password,
-        }),
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
       });
+
       const data = await res.json();
       if (!data.success) return toast.error(data.message);
       setUser(data.user);
@@ -39,7 +42,13 @@ const Page = () => {
   return (
     <div className="login">
       <section>
-        <form onSubmit={loginHandler}>
+        <form onSubmit={registerHandler}>
+          <input
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            type="text"
+            placeholder="Enter Name"
+          />
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}
@@ -52,10 +61,9 @@ const Page = () => {
             type="password"
             placeholder="Enter Password"
           />
-          <button type="submit">Login</button>
-
+          <button type="submit">Sign Up</button>
           <p>OR</p>
-          <Link href={"/register"}>New User</Link>
+          <Link href={"/login"}>Log In</Link>
         </form>
       </section>
     </div>
