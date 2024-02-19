@@ -27,4 +27,3 @@ const schema = new mongoose.Schema({
 mongoose.models = {};
 
 export const Task = mongoose.model("Task", schema);
-//o
